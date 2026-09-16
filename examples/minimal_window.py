@@ -50,16 +50,12 @@ class WindowExample(App):
         """
         pass
 
-    def on_shutdown(self, event: Event):
+    def on_shutdown(self):
         """
         Handle application shutdown.
-        Called when the operating system or
-        the game engine requests that the application terminate.
+        Called when the the game engine requests that the application terminate.
         Use this method to save application state, release resources,
         close windows, and perform other required cleanup.
-
-        Args:
-            event: The shutdown event that triggered the termination.
         """
         pass
 
