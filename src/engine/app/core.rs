@@ -35,12 +35,63 @@ impl ApplicationHandler for App {
     fn window_event(
         &mut self,
         event_loop: &ActiveEventLoop,
-        _window_id: WindowId,
+        window_id: WindowId,
         event: WindowEvent,
     ) {
-        if let WindowEvent::CloseRequested = event {
-            event_loop.exit();
+        let call_event = |ev| {
+            if let Some(obj) = &self.python {
+                Python::attach(|py| {
+                    if let Err(err) = obj.bind(py).call_method1("on_event", ev) {
+                        err.print(py);
+                    }
+                });
+            }
+        };
+
+        let call_render = || {
+            if let Some(obj) = &self.python {
+                Python::attach(|py| {
+                    if let Err(err) = obj.bind(py).call_method0("on_render") {
+                        err.print(py);
+                    }
+                });
+            }
+        };
+
+        let call_shutdown = || {
+            if let Some(obj) = &self.python {
+                Python::attach(|py| {
+                    if let Err(err) = obj.bind(py).call_method0("on_shutdown") {
+                        err.print(py);
+                    }
+                });
+            }
+        };
+
+        match event {
+            WindowEvent::CloseRequested => {
+                call_shutdown();
+                event_loop.exit()
+            }
+            WindowEvent::RedrawRequested => {
+                call_render();
+            }
+            _ => {
+                call_event((Event::Stub,));
+            }
         }
+    }
+
+    fn about_to_wait(&mut self, event_loop: &ActiveEventLoop) {
+        if let Some(obj) = &self.python {
+            Python::attach(|py| {
+                if let Err(err) = obj.bind(py).call_method0("on_update") {
+                    err.print(py);
+                }
+            });
+        }
+
+        self.window.as_ref().unwrap().request_redraw();
     }
 }
 

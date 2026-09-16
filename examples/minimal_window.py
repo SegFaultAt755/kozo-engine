@@ -1,5 +1,5 @@
 from kozo.core import App, Event
-
+from time import sleep
 
 class WindowExample(App):
     """
@@ -22,7 +22,7 @@ class WindowExample(App):
         such as loading configuration, creating windows, initializing
         resources, and preparing game assets.
         """
-        pass
+        print("on_start called from python")
 
     def on_event(self, event: Event):
         """
@@ -31,7 +31,8 @@ class WindowExample(App):
         such as window input, keyboard or mouse activity, or other
         engine-level events.
         """
-        pass
+        print(f"on_event ({event}) called from python")
+        sleep(0.1)
 
     def on_update(self):
         """
@@ -39,7 +40,7 @@ class WindowExample(App):
         This method is intended for game logic, physics, state updates,
         and other CPU-side processing performed once per update cycle.
         """
-        pass
+        print("on_update called from python")
 
     def on_render(self):
         """
@@ -48,7 +49,8 @@ class WindowExample(App):
         and is optimized for graphics-related workloads. Rendering
         behavior may be configured according to the application's needs.
         """
-        pass
+        print("on_render called from python")
+        sleep(0.1)
 
     def on_shutdown(self):
         """
@@ -57,7 +59,7 @@ class WindowExample(App):
         Use this method to save application state, release resources,
         close windows, and perform other required cleanup.
         """
-        pass
+        print("on_shutdown called from python")
 
 
 if __name__ == "__main__":
